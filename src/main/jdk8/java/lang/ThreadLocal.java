@@ -71,6 +71,15 @@ import java.util.function.Supplier;
  * @author  Josh Bloch and Doug Lea
  * @since   1.2
  */
+
+/**
+ * ThreadLocal源码阅读和使用
+ *
+ * 该类提供了线程局部（thread-local）变量，ThreadLocal不是线程，它是线程的一个本地化对象。
+ * 当工作于多线程的对象使用ThreadLocal维护变量时，ThreadLocal为每个使用该变量的线程提供一个变量的副本。
+ * 因此每个线程都可以独立使用自己的变量，而不用管其他线程
+ */
+
 public class ThreadLocal<T> {
     /**
      * ThreadLocals rely on per-thread linear-probe hash maps attached
@@ -81,12 +90,16 @@ public class ThreadLocal<T> {
      * in the common case where consecutively constructed ThreadLocals
      * are used by the same threads, while remaining well-behaved in
      * less common cases.
+     *
+     * 当前ThreadLocal的hashcode值
      */
     private final int threadLocalHashCode = nextHashCode();
 
     /**
      * The next hash code to be given out. Updated atomically. Starts at
      * zero.
+     *
+     * 静态初始化一个hashcode值
      */
     private static AtomicInteger nextHashCode =
         new AtomicInteger();
@@ -95,6 +108,8 @@ public class ThreadLocal<T> {
      * The difference between successively generated hash codes - turns
      * implicit sequential thread-local IDs into near-optimally spread
      * multiplicative hash values for power-of-two-sized tables.
+     *
+     * 表示了连续分配的两个ThreadLocal实例的threadLocalHashCode值的增量, 这是一个常量
      */
     private static final int HASH_INCREMENT = 0x61c88647;
 
@@ -122,6 +137,11 @@ public class ThreadLocal<T> {
      * anonymous inner class will be used.
      *
      * @return the initial value for this thread-local
+     *
+     * 返回该线程局部变量的初始值。该方法是一个protected方法，为了让子类覆盖而设计。
+     * 这个方法是一个延迟调用方法，在线程第一次调用get()或set(Object)时才执行，并且仅执行1次。
+     * 默认实现，直接返回null。
+     *
      */
     protected T initialValue() {
         return null;
@@ -136,6 +156,9 @@ public class ThreadLocal<T> {
      * @return a new thread local variable
      * @throws NullPointerException if the specified supplier is null
      * @since 1.8
+     *
+     * 创建一个线程的局部变量，值由Supplier中的get方法决定，此方法起始于jdk1.8
+     *
      */
     public static <S> ThreadLocal<S> withInitial(Supplier<? extends S> supplier) {
         return new SuppliedThreadLocal<>(supplier);
@@ -144,6 +167,9 @@ public class ThreadLocal<T> {
     /**
      * Creates a thread local variable.
      * @see #withInitial(java.util.function.Supplier)
+     *
+     * 默认的构造函数
+     *
      */
     public ThreadLocal() {
     }
@@ -155,6 +181,10 @@ public class ThreadLocal<T> {
      * by an invocation of the {@link #initialValue} method.
      *
      * @return the current thread's value of this thread-local
+     *
+     * 返回当前线程所对应的线程局部变量的副本，如果当前线程该变量没有赋值，
+     * 它将被initialValue方法初始化
+     *
      */
     public T get() {
         Thread t = Thread.currentThread();
@@ -167,6 +197,7 @@ public class ThreadLocal<T> {
                 return result;
             }
         }
+        // 如果map为null（表示没有赋值）
         return setInitialValue();
     }
 
@@ -195,6 +226,8 @@ public class ThreadLocal<T> {
      *
      * @param value the value to be stored in the current thread's copy of
      *        this thread-local.
+     *
+     * 设置当前线程所对应的线程局部变量的值
      */
     public void set(T value) {
         Thread t = Thread.currentThread();
@@ -215,6 +248,10 @@ public class ThreadLocal<T> {
      * {@code initialValue} method in the current thread.
      *
      * @since 1.5
+     *
+     * 删除当前线程所对应的线程局部变量的值。如果删除后，这个线程局部变量被该线程读取，
+     * 会再次调用initialValue方法初始化这个变量。当线程结束后，对应该线程的局部变量将自动被垃圾回收，
+     * 所以显式调用该方法清除线程局部变量并不是必须的操作，但它可以加快内存回收的速度。
      */
      public void remove() {
          ThreadLocalMap m = getMap(Thread.currentThread());
