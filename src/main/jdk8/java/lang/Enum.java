@@ -52,12 +52,27 @@ import java.io.ObjectStreamException;
  * @see     java.util.EnumMap
  * @since   1.5
  */
+
+/**
+ * enum源码阅读和使用（JDK1.8）
+ *
+ * 定义：
+ * 所有java枚举类型都继承自该抽象类。enum声明枚举类型，
+ * 不可以通过显式继承（entends）该抽象类的方式声明
+ * 可序列化（实现可序列化）、在集合里直接使用sort(支持排序)
+ *
+ */
 public abstract class Enum<E extends Enum<E>>
         implements Comparable<E>, Serializable {
+
+    /**********************************属性***********************************/
+
     /**
      * The name of this enum constant, as declared in the enum declaration.
      * Most programmers should use the {@link #toString} method rather than
      * accessing this field.
+     *
+     * 枚举常量的名称 一般使用toString获取名称
      */
     private final String name;
 
@@ -85,6 +100,8 @@ public abstract class Enum<E extends Enum<E>>
      * Most programmers will have no use for this field.  It is designed
      * for use by sophisticated enum-based data structures, such as
      * {@link java.util.EnumSet} and {@link java.util.EnumMap}.
+     *
+     * 返回枚举常量的序数,在枚举声明中的位置，初始值为0
      */
     private final int ordinal;
 
@@ -113,6 +130,8 @@ public abstract class Enum<E extends Enum<E>>
      * @param ordinal - The ordinal of this enumeration constant (its position
      *         in the enum declaration, where the initial constant is assigned
      *         an ordinal of zero).
+     *
+     * 构造器,传入名称和序数
      */
     protected Enum(String name, int ordinal) {
         this.name = name;
@@ -126,6 +145,9 @@ public abstract class Enum<E extends Enum<E>>
      * method when a more "programmer-friendly" string form exists.
      *
      * @return the name of this enum constant
+     *
+     * 一般使用此方法获取name
+     *
      */
     public String toString() {
         return name;

@@ -108,15 +108,24 @@ import java.util.regex.PatternSyntaxException;
  * @since   JDK1.0
  */
 
+/**
+ * String源码阅读和使用
+ * 定义：
+ * 实现java.io.Serializable、Comparable<String>、CharSequence接口，类是final修饰的，所以不能被修改不能被继承
+ * 可序列化、在集合里直接使用sort(排序)、本质上是一个字符序列
+ */
 public final class String
     implements java.io.Serializable, Comparable<String>, CharSequence {
     /** The value is used for character storage. */
+    // 字符数组，用于存储字符串内容
     private final char value[];
 
     /** Cache the hash code for the string */
+    // 缓存字符串的hash值，默认为0
     private int hash; // Default to 0
 
     /** use serialVersionUID from JDK 1.0.2 for interoperability */
+    // 声明序列化的UID
     private static final long serialVersionUID = -6849794470754667710L;
 
     /**
@@ -126,6 +135,10 @@ public final class String
      * <a href="{@docRoot}/../platform/serialization/spec/output.html">
      * Object Serialization Specification, Section 6.2, "Stream Elements"</a>
      */
+    // 实现了Serializable接口，支持序列化和反序列化
+     /*(Java序列化机制是通过在运行时判断类的serialVersionUID来验证版本的一致性。
+    在进行反序列化时JVM会把传来的字节的serialVersionUID与本地相应实体类的serialVersionUID进行比较，
+    如果相同就认为是一致的，可以进行序列化，否则就会出现序列化版本不一致的异常报InvalidCastException)*/
     private static final ObjectStreamField[] serialPersistentFields =
         new ObjectStreamField[0];
 

@@ -49,16 +49,28 @@ import java.lang.annotation.Native;
  * @author  Joseph D. Darcy
  * @since JDK1.0
  */
+
+/**
+ * Integer源码阅读和使用
+ *
+ * 定义：
+ * 继承Number、实现Comparable<Integer>接口，类是final修饰的，所以不能被修改不能被继承
+ * 可序列化（Number实现可序列化）、在集合里直接使用sort(支持排序)
+ */
 public final class Integer extends Number implements Comparable<Integer> {
     /**
      * A constant holding the minimum value an {@code int} can
      * have, -2<sup>31</sup>.
+     *
+     * 最小值为-（2的31次方），表示 int 类型能够表示的最小值 -2147483648
      */
     @Native public static final int   MIN_VALUE = 0x80000000;
 
     /**
      * A constant holding the maximum value an {@code int} can
      * have, 2<sup>31</sup>-1.
+     *
+     * 最大值为（（2的31次方）-1），表示 int 类型能够表示的最大值 2147483647
      */
     @Native public static final int   MAX_VALUE = 0x7fffffff;
 
@@ -845,6 +857,9 @@ public final class Integer extends Number implements Comparable<Integer> {
      *
      * @param   value   the value to be represented by the
      *                  {@code Integer} object.
+     *
+     * 构造器
+     * 构造一个新分配的 Integer 对象，它表示指定的 int 值
      */
     public Integer(int value) {
         this.value = value;
@@ -862,6 +877,9 @@ public final class Integer extends Number implements Comparable<Integer> {
      * @exception  NumberFormatException  if the {@code String} does not
      *               contain a parsable integer.
      * @see        java.lang.Integer#parseInt(java.lang.String, int)
+     *
+     * 构造器
+     * 构造一个新分配的 Integer 对象，它表示 String 参数所指示的 int 值
      */
     public Integer(String s) throws NumberFormatException {
         this.value = parseInt(s, 10);
@@ -1319,6 +1337,8 @@ public final class Integer extends Number implements Comparable<Integer> {
      * complement binary form.
      *
      * @since 1.5
+     *
+     * 用来以二进制补码形式表示 int 值的比特位数(占32位)
      */
     @Native public static final int SIZE = 32;
 
@@ -1327,6 +1347,8 @@ public final class Integer extends Number implements Comparable<Integer> {
      * complement binary form.
      *
      * @since 1.8
+     *
+     * 用来以二进制补码形式表示 int 值的字节数（占4个字节）。JDK1.8以后才有
      */
     public static final int BYTES = SIZE / Byte.SIZE;
 
