@@ -206,6 +206,9 @@ public class ThreadLocal<T> {
      * of set() in case user has overridden the set() method.
      *
      * @return the initial value
+     *
+     * 从当前线程中获取ThreadLocalMap，如果map不为空，就调用set方法。否则调用createMap创建一个新的Map
+     *
      */
     private T setInitialValue() {
         T value = initialValue();
@@ -331,6 +334,9 @@ public class ThreadLocal<T> {
      * WeakReferences for keys. However, since reference queues are not
      * used, stale entries are guaranteed to be removed only when
      * the table starts running out of space.
+     *
+     * 可以将ThreadLocalMap理解为Map
+     *
      */
     static class ThreadLocalMap {
 
@@ -341,6 +347,8 @@ public class ThreadLocal<T> {
          * == null) mean that the key is no longer referenced, so the
          * entry can be expunged from table.  Such entries are referred to
          * as "stale entries" in the code that follows.
+         *
+         * Entry封装了ThreadLocal的弱引用，以及线程局部变量
          */
         static class Entry extends WeakReference<ThreadLocal<?>> {
             /** The value associated with this ThreadLocal. */
@@ -354,27 +362,37 @@ public class ThreadLocal<T> {
 
         /**
          * The initial capacity -- MUST be a power of two.
+         *
+         * table的默认初始化容量，是2的n次方
          */
         private static final int INITIAL_CAPACITY = 16;
 
         /**
          * The table, resized as necessary.
          * table.length MUST always be a power of two.
+         *
+         * Entry数组，数组的长度总是2的你次方
          */
         private Entry[] table;
 
         /**
          * The number of entries in the table.
+         *
+         * table中entry的数量
          */
         private int size = 0;
 
         /**
          * The next size value at which to resize.
+         *
+         * 下一次扩容的大小
          */
         private int threshold; // Default to 0
 
         /**
          * Set the resize threshold to maintain at worst a 2/3 load factor.
+         *
+         * 设置负载因子threshold, 当容量达到2/3时就进行扩容
          */
         private void setThreshold(int len) {
             threshold = len * 2 / 3;
@@ -398,6 +416,8 @@ public class ThreadLocal<T> {
          * Construct a new map initially containing (firstKey, firstValue).
          * ThreadLocalMaps are constructed lazily, so we only create
          * one when we have at least one entry to put in it.
+         *
+         *
          */
         ThreadLocalMap(ThreadLocal<?> firstKey, Object firstValue) {
             table = new Entry[INITIAL_CAPACITY];
